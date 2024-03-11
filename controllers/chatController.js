@@ -1,5 +1,5 @@
 import { ChatModel } from '../models/chatModel.js';
-import { MessageModel } from '../models/messageModel.js'; // Asegúrate de importar el modelo de mensajes
+import { MessageModel } from '../models/chatModel.js';
 
 async function createChat(req, res) {
   try {
@@ -17,6 +17,21 @@ async function createChat(req, res) {
 
 // Get all chats with complete messages
 async function getAllChats(req, res) {
+  try {
+    const chats = await ChatModel.find();
+    const chatsWithMessages = await Promise.all(chats.map(async (chat) => {
+      const chatObj = chat.toObject();
+      chatObj.messages = await MessageModel.find({ _id: { $in: chat.messages } });
+      return chatObj;
+    }));
+    res.json(chatsWithMessages);
+  } catch (error) {
+    console.error("Error getting all chats:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+async function getChats(req, res) {
   try {
     const chats = await ChatModel.find();
     const chatsWithMessages = await Promise.all(chats.map(async (chat) => {
