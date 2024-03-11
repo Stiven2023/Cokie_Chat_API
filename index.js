@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import connectToDatabase from './server/db.js';
 import messageRoutes from './routes/messageRoute.js';
 import chatRoutes from './routes/chatRoute.js';
+import cors from 'cors'; // Importa el módulo cors
 
 const app = express();
 const server = http.createServer(app);
@@ -20,6 +21,9 @@ io.on('connection', (socket) => {
 
 // Middleware para procesar JSON
 app.use(express.json());
+
+// Middleware para configurar CORS para aceptar solicitudes desde cualquier origen
+app.use(cors());
 
 // Rutas de mensajes y chats
 app.use('/messages', messageRoutes);
