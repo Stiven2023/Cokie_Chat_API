@@ -1,0 +1,19 @@
+/node_modules
+
+# Archivos de registro
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Directorio de salida de la compilación
+/dist
+
+# Archivos de entorno
+.env
+
+# Directorios de caché
+.cache
+.next
+
+# Sistema de archivos
+.DS_Store
