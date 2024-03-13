@@ -4,8 +4,8 @@ import { io } from '../index.js';
 // Crear un nuevo mensaje
 export async function createMessage(req, res) {
   try {
-    const { sender, content, chatId } = req.body;
-    const message = new MessageModel ({ sender: sender, content: content });
+    const { user_id, contentMessage, chatId } = req.body;
+    const message = new MessageModel ({ sender: user_id, content: contentMessage });
     await message.save();
     
     // Agregar el ID del mensaje al chat correspondiente
