@@ -10,6 +10,7 @@ export async function createMessage(req, res) {
     // Agregar el ID del mensaje al chat correspondiente
     await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message._id } });
 
+    console.log(message);
     io.emit('newMessage', message);
     res.status(201).json(message);
   } catch (error) {
