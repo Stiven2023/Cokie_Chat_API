@@ -6,6 +6,7 @@ export async function createMessage(req, res) {
   try {
     const { sender, content, chatId } = req.body;
     const message = new MessageModel ({ sender: sender, content: content });
+    await message.save();
     
     // Agregar el ID del mensaje al chat correspondiente
     await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message._id } });
