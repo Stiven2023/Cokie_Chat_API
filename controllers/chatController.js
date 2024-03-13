@@ -15,7 +15,6 @@ async function createChat(req, res) {
   }
 }
 
-// Get all chats with complete messages
 async function getAllChats(req, res) {
   try {
     const chats = await ChatModel.find();

@@ -10,7 +10,7 @@ const MessageSchema = new Schema({
 });
 
 const ChatSchema = new Schema({
-  participantNames: [{ type: String }], // Nombres de los usuarios en el chat
+  participantNames: [{ type: String }],
   users: [{ type: Schema.Types.ObjectId, ref: "User" }],
   messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],
   createdAt: { type: Date, default: Date.now },

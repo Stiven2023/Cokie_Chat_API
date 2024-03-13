@@ -19,17 +19,13 @@ io.on('connection', (socket) => {
   });
 });
 
-// Middleware para procesar JSON
 app.use(express.json());
 
-// Middleware para configurar CORS para aceptar solicitudes desde cualquier origen
 app.use(cors());
 
-// Rutas de mensajes y chats
 app.use('/messages', messageRoutes);
 app.use('/chats', chatRoutes);
 
-// Conexión a MongoDB y inicio del servidor
 connectToDatabase()
   .then(() => {
     server.listen(PORT, () => {
