@@ -5,6 +5,7 @@ import { io } from '../index.js';
 export async function createMessage(req, res) {
   try {
     const { user_id, contentMessage, chatId } = req.body;
+    console.log(user_id, contentMessage);
     const message = new MessageModel ({ sender: user_id, content: contentMessage });
     await message.save();
     
