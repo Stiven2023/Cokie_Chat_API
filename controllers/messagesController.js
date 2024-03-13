@@ -5,7 +5,7 @@ import { io } from '../index.js';
 export async function createMessage(req, res) {
   try {
     const { sender, content, chatId } = req.body;
-    const message = await MessageModel.create({ sender, content });
+    const message = new MessageModel ({ sender: sender, content: content });
     
     // Agregar el ID del mensaje al chat correspondiente
     await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message._id } });
