@@ -13,15 +13,15 @@ import bcrypt from 'bcrypt';
 //   }
 // };
 
-// // Controlador para obtener todos los usuarios
-// exports.getAllUsers = async (req, res) => {
-//   try {
-//     const users = await User.find();
-//     res.status(200).json(users);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
+// Controlador para obtener todos los usuarios
+async function getAllUsers (req, res) {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 
 // Controlador para registrar un nuevo usuario
@@ -73,4 +73,4 @@ async function logoutUser (req, res) {
   res.status(200).json({ message: 'Cierre de sesión exitoso' });
 };
 
-export { registerUser, loginUser, logoutUser };
+export { registerUser, loginUser, logoutUser, getAllUsers };
