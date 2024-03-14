@@ -1,6 +1,7 @@
 import { MessageModel, ChatModel } from '../models/chatModel.js';
 import { io } from '../index.js';
 
+// Crear un nuevo mensaje
 export async function createMessage(req, res) {
   try {
     const { user_id, contentMessage, chatId } = req.body;
@@ -8,9 +9,8 @@ export async function createMessage(req, res) {
     const message = new MessageModel ({ sender: user_id, content: contentMessage });
     await message.save();
     
-    const chat = new ChatModel.findOne({_id : chatId});
-    chat.message.push(message._id);
-    await chat.save();
+    // Agregar el ID del mensaje al chat correspondiente
+    await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message._id } });
 
     console.log(message);
     io.emit('newMessage', message);
@@ -21,6 +21,7 @@ export async function createMessage(req, res) {
   }
 }
 
+// Obtener todos los mensajes
 export async function getAllMessages(req, res) {
   try {
     const messages = await MessageModel.find();
@@ -31,6 +32,7 @@ export async function getAllMessages(req, res) {
   }
 }
 
+// Obtener un mensaje por su ID
 export async function getMessageById(req, res) {
   try {
     const messageId = req.params.id;
@@ -46,6 +48,7 @@ export async function getMessageById(req, res) {
   }
 }
 
+// Actualizar un mensaje por su ID
 export async function updateMessage(req, res) {
   try {
     const messageId = req.params.id;
@@ -66,6 +69,7 @@ export async function updateMessage(req, res) {
   }
 }
 
+// Eliminar un mensaje por su ID
 export async function deleteMessage(req, res) {
   try {
     const messageId = req.params.id;
