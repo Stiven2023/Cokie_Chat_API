@@ -4,7 +4,8 @@ import { Server } from 'socket.io';
 import connectToDatabase from './server/db.js';
 import messageRoutes from './routes/messageRoute.js';
 import chatRoutes from './routes/chatRoute.js';
-import cors from 'cors'; // Importa el módulo cors
+import userRoutes from './routes/userRoute.js';
+import cors from 'cors';
 
 const app = express();
 const server = http.createServer(app);
@@ -25,6 +26,7 @@ app.use(cors());
 
 app.use('/messages', messageRoutes);
 app.use('/chats', chatRoutes);
+app.use('/users', userRoutes);
 
 connectToDatabase()
   .then(() => {
