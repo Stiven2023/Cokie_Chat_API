@@ -1,4 +1,4 @@
-import User from '../models/userModel.js';
+import { User }  from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
@@ -25,7 +25,7 @@ import bcrypt from 'bcrypt';
 
 
 // Controlador para registrar un nuevo usuario
-exports.registerUser = async (req, res) => {
+async function registerUser (req, res) {
   try {
     // Verifica si el usuario ya existe
     const existingUser = await User.findOne({ email: req.body.email });
@@ -44,7 +44,7 @@ exports.registerUser = async (req, res) => {
 };
 
 // Controlador para iniciar sesión
-exports.loginUser = async (req, res) => {
+async function loginUser (req, res) {
   try {
     // Busca al usuario por su correo electrónico
     const user = await User.findOne({ email: req.body.email });
@@ -68,7 +68,9 @@ exports.loginUser = async (req, res) => {
 };
 
 // Controlador para cerrar sesión (opcional, si estás utilizando tokens de sesión)
-exports.logoutUser = async (req, res) => {
+async function logoutUser (req, res) {
   // Simplemente podrías invalidar el token aquí, pero eso depende de tu implementación
   res.status(200).json({ message: 'Cierre de sesión exitoso' });
 };
+
+export { registerUser, loginUser, logoutUser };
