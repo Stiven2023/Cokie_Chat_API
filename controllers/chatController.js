@@ -1,6 +1,6 @@
 import { ChatModel } from '../models/chatModel.js';
 import { MessageModel } from '../models/chatModel.js';
-import { io } from '../index';
+import { io } from '../index.js';
 
 async function createChat(req, res) {
   try {
