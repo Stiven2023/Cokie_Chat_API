@@ -2,17 +2,6 @@ import { User }  from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-// Controlador para crear un nuevo usuario
-// exports.createUser = async (req, res) => {
-//   try {
-//     const newUser = new User(req.body);
-//     const savedUser = await newUser.save();
-//     res.status(201).json(savedUser);
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// };
-
 // Controlador para obtener todos los usuarios
 async function getAllUsers (req, res) {
   try {
@@ -33,8 +22,16 @@ async function registerUser (req, res) {
       return res.status(400).json({ message: 'El usuario ya existe' });
     }
 
-    // Crea un nuevo usuario
-    const newUser = new User(req.body);
+    // Encripta la contraseña
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    // Crea un nuevo usuario con la contraseña encriptada
+    const newUser = new User({
+      username: req.body.username,
+      email: req.body.email,
+      password: hashedPassword, // Guarda la contraseña encriptada en la base de datos
+      // Otros campos del usuario, si los hay
+    });
     await newUser.save();
 
     res.status(201).json({ message: 'Usuario registrado exitosamente' });

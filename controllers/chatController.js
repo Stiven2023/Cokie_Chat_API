@@ -31,6 +31,17 @@ async function getAllChats(req, res) {
   }
 }
 
+async function joinChat(req, res) {
+  try {
+    const chatId = req.params.id;
+    io.emit('userJoined', { chatId, userId: req.userId }); // Reemplaza 'req.userId' con el ID del usuario real
+    res.status(200).json({ message: 'Joined chat successfully' });
+  } catch (error) {
+    console.error("Error joining chat:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
 async function getChatById(req, res) {
   try {
     const chatId = req.params.id;
@@ -104,4 +115,4 @@ async function sendMessageToChat(chatId, message) {
   }
 }
 
-export { createChat, getAllChats, getChatById, updateChat, deleteChat, sendMessageToChat };
+export { createChat, getAllChats, getChatById, updateChat, deleteChat, sendMessageToChat, joinChat };
