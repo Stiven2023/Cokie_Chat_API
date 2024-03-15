@@ -13,7 +13,7 @@ export async function createMessage(req, res) {
     await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message._id } });
 
     console.log(message);
-    io.emit('newMessage', message);
+    io.emit('newMessage', message); // Emitir evento de nuevo mensaje
     res.status(201).json(message);
   } catch (error) {
     console.error("Error creating message:", error);

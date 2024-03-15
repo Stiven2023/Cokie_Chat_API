@@ -1,12 +1,13 @@
 import { ChatModel } from '../models/chatModel.js';
 import { MessageModel } from '../models/chatModel.js';
+import { io } from '../index';
 
 async function createChat(req, res) {
   try {
     const { participantNames, users, messages } = req.body;
     const chat = await ChatModel.create({ participantNames, users, messages });
 
-    io.emit('newChat', chat);
+    io.emit('newChat', chat); // Emitir evento de nuevo chat
 
     res.status(201).json(chat);
   } catch (error) {
@@ -80,4 +81,22 @@ async function populateChatWithMessages(chat) {
   return chatObj;
 }
 
-export { createChat, getAllChats, getChatById, updateChat, deleteChat };
+// Agregar función para enviar mensajes a un chat existente
+async function sendMessageToChat(chatId, message) {
+  try {
+    // Actualizar el chat con el nuevo mensaje
+    const updatedChat = await ChatModel.findByIdAndUpdate(chatId, {
+      $push: { messages: message._id }
+    }, { new: true });
+
+    // Emitir evento para el chat actualizado
+    io.emit('chatUpdated', updatedChat);
+
+    return updatedChat;
+  } catch (error) {
+    console.error("Error sending message to chat:", error);
+    throw error;
+  }
+}
+
+export { createChat, getAllChats, getChatById, updateChat, deleteChat, sendMessageToChat };

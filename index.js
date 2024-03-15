@@ -14,7 +14,13 @@ const PORT = process.env.PORT || 3000;
 
 io.on('connection', (socket) => {
   console.log('A user connected');
-  
+
+  // Manejar evento cuando un cliente se une a un chat específico
+  socket.on('joinChat', (chatId) => {
+    console.log(`User ${socket.id} joined chat ${chatId}`);
+    socket.join(chatId); // Unir al cliente al chat específico
+  });
+
   socket.on('disconnect', () => {
     console.log('User disconnected');
   });
