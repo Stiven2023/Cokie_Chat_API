@@ -38,7 +38,7 @@ async function getChatById(req, res) {
     if (!chat) {
       return res.status(404).json({ error: 'Chat not found' });
     }
-    const chatWithMessages = await populateChatWithMessages(chat);
+    const chatWithMessages = await ChatModel.findById(chatId).populate('messages');
     res.json(chatWithMessages);
   } catch (error) {
     console.error("Error getting chat by ID:", error);
@@ -76,10 +76,15 @@ async function deleteChat(req, res) {
 }
 
 async function populateChatWithMessages(chat) {
-  const chatObj = chat.toObject();
+  // Usar lean() para obtener un objeto plano directamente desde la consulta a la base de datos
+  const chatObj = await chat.toObject({ getters: true, virtuals: true });
+
+  // Obtener los mensajes asociados al chat
   chatObj.messages = await MessageModel.find({ _id: { $in: chat.messages } });
+
   return chatObj;
 }
+
 
 // Agregar función para enviar mensajes a un chat existente
 async function sendMessageToChat(chatId, message) {
