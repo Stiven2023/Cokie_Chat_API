@@ -7,7 +7,7 @@ async function createChat(req, res) {
     const { participantNames, users, messages } = req.body;
     const chat = await ChatModel.create({ participantNames, users, messages });
 
-    io.emit('newChat', chat); // Emitir evento de nuevo chat
+    io.emit('newChat', chat);
 
     res.status(201).json(chat);
   } catch (error) {
@@ -34,7 +34,7 @@ async function getAllChats(req, res) {
 async function joinChat(req, res) {
   try {
     const chatId = req.params.id;
-    io.emit('userJoined', { chatId, userId: req.userId }); // Reemplaza 'req.userId' con el ID del usuario real
+    io.emit('userJoined', { chatId, userId: req.userId }); 
     res.status(200).json({ message: 'Joined chat successfully' });
   } catch (error) {
     console.error("Error joining chat:", error);
@@ -49,6 +49,12 @@ async function getChatById(req, res) {
     if (!chat) {
       return res.status(404).json({ error: 'Chat not found' });
     }
+
+    io.on("joinChat", (chatId) => {
+      io.emit(`User ${socket.id} joined chat ${chatId}`);
+      socket.join(chatId);
+    });
+
     const chatWithMessages = await ChatModel.findById(chatId).populate('messages');
     res.json(chatWithMessages);
   } catch (error) {
