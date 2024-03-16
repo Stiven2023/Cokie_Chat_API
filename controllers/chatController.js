@@ -31,13 +31,20 @@ async function createChat(req, res) {
 
 async function getAllChats(req, res) {
   try {
-    const chats = await ChatModel.find();
+    const chats = await ChatModel.find().populate({
+      path: 'messages',
+      populate: {
+        path: 'sender',
+        select: 'username' // Selecciona el campo 'username' del remitente
+      }
+    });
     res.json(chats);
   } catch (error) {
     console.error("Error getting all chats:", error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
 
 async function joinChat(req, res) {
   try {
