@@ -1,25 +1,32 @@
 import { MessageModel, ChatModel } from '../models/chatModel.js';
 import { io } from '../index.js';
 
-// Crear un nuevo mensaje
-export async function createMessage(req, res) {
-  try {
-    const { user_id, contentMessage, chatId } = req.body;
-    console.log(user_id, contentMessage);
-    const message = new MessageModel ({ sender: user_id, content: contentMessage });
-    await message.save();
-    
-    // Agregar el ID del mensaje al chat correspondiente
-    await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message._id } });
+const messageSocketController = (socket) => {
+  console.log("User connected to message socket");
 
-    console.log(message);
-    io.emit('newMessage', message); // Emitir evento de nuevo mensaje
-    res.status(201).json(message);
-  } catch (error) {
-    console.error("Error creating message:", error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-}
+  socket.on("send_message", async (messageData) => {
+    try {
+      const { user_id, contentMessage, chatId } = messageData;
+      const message = new MessageModel({ sender: user_id, content: contentMessage });
+      await message.save();
+
+      // Actualizar el chat con el nuevo mensaje
+      await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message._id } });
+
+      // Emitir evento de nuevo mensaje
+      io.emit('newMessage', message);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected from message socket");
+    // Lógica para manejar la desconexión del usuario
+  });
+};
+
+export default messageSocketController;
 
 // Obtener todos los mensajes
 export async function getAllMessages(req, res) {

@@ -9,7 +9,11 @@ import cors from "cors";
 
 const app = express();
 const server = http.createServer(app);
-export const io = new Server(server);
+export const io = new Server(server, {
+  cors: {
+    origin: "https://cokie-chat-api.onrender.com"
+  }
+});
 const PORT = process.env.PORT || 3000;
 
 io.on("connection", (socket) => {
