@@ -1,5 +1,6 @@
 import { ChatModel } from '../models/chatModel.js';
 import { io } from '../index.js';
+import { User } from '../models/userModel.js';
 
 const chatSocketController = (socket) => {
   console.log("User connected to chat socket");
@@ -61,27 +62,18 @@ async function joinChat(req, res) {
 
 async function getChatById(req, res) {
   try {
-    const chatId = mongoose.Types.ObjectId(req.params.id);
-
+    const chatId = req.params.id;
     const chat = await ChatModel.findById(chatId);
-
     if (!chat) {
       return res.status(404).json({ error: 'Chat not found' });
     }
-
-    const messages = chat.messages.map(message => ({
-      sender: message.sender,
-      content: message.content,
-      createdAt: message.createdAt
-    }));
-
-    res.json(messages);
+    const chatWithMessages = await ChatModel.findById(chatId).populate('messages');
+    res.json(chatWithMessages);
   } catch (error) {
-    console.error("Error getting chat messages by ID:", error);
+    console.error("Error getting chat by ID:", error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-
 
 async function updateChat(req, res) {
   try {
