@@ -61,20 +61,27 @@ async function joinChat(req, res) {
 
 async function getChatById(req, res) {
   try {
-    const chatId = req.params.id;
-    console.log(chatId);
+    const chatId = mongoose.Types.ObjectId(req.params.id);
+
     const chat = await ChatModel.findById(chatId);
 
     if (!chat) {
       return res.status(404).json({ error: 'Chat not found' });
     }
 
-    res.json(chat);
+    const messages = chat.messages.map(message => ({
+      sender: message.sender,
+      content: message.content,
+      createdAt: message.createdAt
+    }));
+
+    res.json(messages);
   } catch (error) {
-    console.error("Error getting chat by ID:", error);
+    console.error("Error getting chat messages by ID:", error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
 
 async function updateChat(req, res) {
   try {
