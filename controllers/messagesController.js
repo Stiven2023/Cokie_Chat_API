@@ -7,14 +7,22 @@ const messageSocketController = (socket) => {
   socket.on("send_message", async (messageData) => {
     try {
       const { user_id, contentMessage, chatId } = messageData;
+      console.log(contentMessage);
+
+      if (!user_id || !contentMessage || !chatId) {
+        console.error("Missing data in message");
+        return;
+      }
+
       const message = new MessageModel({ sender: user_id, content: contentMessage });
       await message.save();
 
-      // Actualizar el chat con el nuevo mensaje
       await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message._id } });
 
-      // Emitir evento de nuevo mensaje
-      io.emit('newMessage', message);
+      // Obtener el mensaje con información completa (incluyendo sender y createdAt)
+      const fullMessage = await MessageModel.findById(message._id).populate('sender');
+
+      io.emit('newMessage', fullMessage);
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -22,13 +30,12 @@ const messageSocketController = (socket) => {
 
   socket.on("disconnect", () => {
     console.log("User disconnected from message socket");
-    // Lógica para manejar la desconexión del usuario
   });
 };
 
+
 export default messageSocketController;
 
-// Obtener todos los mensajes
 export async function getAllMessages(req, res) {
   try {
     const messages = await MessageModel.find();

@@ -36,7 +36,7 @@ async function getAllChats(req, res) {
       path: 'messages',
       populate: {
         path: 'sender',
-        select: 'username' // Selecciona el campo 'username' del remitente
+        select: 'username'
       }
     });
     res.json(chats);
