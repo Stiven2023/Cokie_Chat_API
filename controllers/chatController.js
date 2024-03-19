@@ -1,6 +1,6 @@
 import { ChatModel } from '../models/chatModel.js';
 import { io } from '../index.js';
-import { User } from '../models/userModel.js';
+import { ObjectId } from 'mongoose'; // Importa ObjectId de mongoose
 
 const chatSocketController = (socket) => {
   console.log("User connected to chat socket");
@@ -62,7 +62,7 @@ async function joinChat(req, res) {
 
 async function getChatById(req, res) {
   try {
-    const chatId = req.params.id;
+    const chatId = ObjectId(req.params.id); // Convierte el chatId de String a ObjectId
     const chat = await ChatModel.findById(chatId);
     if (!chat) {
       return res.status(404).json({ error: 'Chat not found' });
@@ -77,7 +77,7 @@ async function getChatById(req, res) {
 
 async function updateChat(req, res) {
   try {
-    const chatId = req.params.id;
+    const chatId = ObjectId(req.params.id); // Convierte el chatId de String a ObjectId
     const updateData = req.body;
     const updatedChat = await ChatModel.findByIdAndUpdate(chatId, updateData, { new: true });
 
@@ -96,7 +96,7 @@ async function updateChat(req, res) {
 
 async function deleteChat(req, res) {
   try {
-    const chatId = req.params.id;
+    const chatId = ObjectId(req.params.id); // Convierte el chatId de String a ObjectId
     const deletedChat = await ChatModel.findByIdAndDelete(chatId);
 
     if (!deletedChat) {

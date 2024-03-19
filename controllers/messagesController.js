@@ -1,5 +1,6 @@
 import { MessageModel, ChatModel } from '../models/chatModel.js';
-import { io } from '../index.js';
+import { io } from '../index.js';}
+import { ObjectId } from 'mongoose';
 
 export async function messageSocketController (socket) {
   console.log("User connected to message socket");
@@ -14,12 +15,13 @@ export async function messageSocketController (socket) {
         return;
       }
 
+      const objectIdChatId = ObjectId(chatId);
+
       const message = new MessageModel({ sender: user_id, content: contentMessage });
       await message.save();
 
-      await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message._id } });
+      await ChatModel.findByIdAndUpdate(objectIdChatId, { $push: { messages: message._id } });
 
-      // Obtener el mensaje con información completa (incluyendo sender y createdAt)
       const fullMessage = await MessageModel.findById(message._id).populate('sender');
 
       io.emit('newMessage', fullMessage);
