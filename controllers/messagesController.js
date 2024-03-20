@@ -1,7 +1,6 @@
 import { MessageModel, ChatModel } from '../models/chatModel.js';
 import { io } from '../index.js';
 
-// Crear un nuevo mensaje
 export async function createMessage(req, res) {
   try {
     const { user_id, contentMessage, chatId } = req.body;
@@ -13,7 +12,7 @@ export async function createMessage(req, res) {
 
     console.log(message);
     io.emit('newMessage', message);
-    res.status(201).json(message);
+    res.status(201).json(message, chatId);
   } catch (error) {
     console.error("Error creating message:", error);
     res.status(500).json({ error: 'Internal Server Error' });
