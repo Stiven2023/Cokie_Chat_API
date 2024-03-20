@@ -1,39 +1,24 @@
 import { MessageModel, ChatModel } from '../models/chatModel.js';
 import { io } from '../index.js';
 
-async function messageSocketController (socket) {
-  console.log("User connected to message socket");
+// Crear un nuevo mensaje
+export async function createMessage(req, res) {
+  try {
+    const { user_id, contentMessage, chatId } = req.body;
+    console.log(user_id, contentMessage);
+    const message = new MessageModel ({ sender: user_id, content: contentMessage });
+    await message.save();
+    
+    await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message._id } });
 
-  socket.on("send_message", async (messageData) => {
-    try {
-      const { user_id, contentMessage, chatId } = messageData;
-      console.log(contentMessage);
-
-      if (!user_id || !contentMessage || !chatId) {
-        console.error("Missing data in message");
-        return;
-      }
-
-      const message = new MessageModel({ sender: user_id, content: contentMessage });
-      await message.save();
-
-      await ChatModel.findByIdAndUpdate(objectIdChatId, { $push: { messages: message._id } });
-
-      const fullMessage = await MessageModel.findById(message._id).populate('sender');
-
-      io.emit('newMessage', fullMessage);
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected from message socket");
-  });
-};
-
-
-export default messageSocketController;
+    console.log(message);
+    io.emit('newMessage', message);
+    res.status(201).json(message);
+  } catch (error) {
+    console.error("Error creating message:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
 
 export async function getAllMessages(req, res) {
   try {
