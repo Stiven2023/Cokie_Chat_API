@@ -62,7 +62,7 @@ async function joinChat(req, res) {
 
 async function getChatById(req, res) {
   try {
-    const chatId = ObjectId(req.params.id); // Convierte el chatId de String a ObjectId
+    const chatId = req.params.chatId;
     const chat = await ChatModel.findById(chatId);
     if (!chat) {
       return res.status(404).json({ error: 'Chat not found' });
