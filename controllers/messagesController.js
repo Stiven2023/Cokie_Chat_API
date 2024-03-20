@@ -1,8 +1,7 @@
 import { MessageModel, ChatModel } from '../models/chatModel.js';
 import { io } from '../index.js';
-import { ObjectId } from 'mongoose';
 
-export async function messageSocketController (socket) {
+async function messageSocketController (socket) {
   console.log("User connected to message socket");
 
   socket.on("send_message", async (messageData) => {
