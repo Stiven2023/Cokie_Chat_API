@@ -15,8 +15,6 @@ export async function messageSocketController (socket) {
         return;
       }
 
-      const objectIdChatId = ObjectId(chatId);
-
       const message = new MessageModel({ sender: user_id, content: contentMessage });
       await message.save();
 
