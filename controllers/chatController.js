@@ -20,11 +20,16 @@ async function createChat(req, res) {
   try {
     const { users } = req.body;
 
-    // Retrieve usernames for each _id
     const usernames = await Promise.all(
       users.map(async (userId) => {
-        const user = await User.findById(userId);
-        return user ? user.username : 'Unknown User'; 
+        try {
+          const user = await User.findById(userId);
+          return user ? user.username : 'Unknown User';
+        } catch (error) {
+          console.error(`Error fetching username for userId: ${userId}`, error);
+          // Consider returning a default value or handling the error differently
+          return 'Unknown User'; // Example handling
+        }
       })
     );
 
