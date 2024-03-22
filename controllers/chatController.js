@@ -17,9 +17,25 @@ export default chatSocketController;
 
 async function createChat(req, res) {
   try {
-    const { participantNames, users, messages } = req.body;
-    const chat = await ChatModel.create({ participantNames, users });
+    const { users } = req.body;
 
+    // Retrieve usernames for each _id
+    const usernames = await Promise.all(
+      users.map(async (userId) => {
+        const user = await UserModel.findById(userId); // Assuming UserModel for fetching user data
+        return user ? user.username : 'Unknown User'; // Handle potential errors
+      })
+    );
+
+    // Create the chat with usernames
+    const chat = await ChatModel.create({ users, participantNames: usernames });
+
+    // Associate participants with the chat (using the original _ids)
+    for (const userId of users) {
+      await associateParticipant(chat._id, userId); // Replace with your logic
+    }
+
+    // Broadcast the new chat (optional, modify if needed)
     io.emit('newChat', chat);
 
     res.status(201).json(chat);
@@ -28,6 +44,7 @@ async function createChat(req, res) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
 
 async function getAllChats(req, res) {
   try {
