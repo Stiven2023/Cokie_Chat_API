@@ -1,5 +1,7 @@
 import { ChatModel } from '../models/chatModel.js';
+import { User } from '../models/userModel.js';
 import { io } from '../index.js';
+import { User } from '../models/userModel.js';
 
 const chatSocketController = (socket) => {
   console.log("User connected to chat socket");
@@ -22,20 +24,17 @@ async function createChat(req, res) {
     // Retrieve usernames for each _id
     const usernames = await Promise.all(
       users.map(async (userId) => {
-        const user = await UserModel.findById(userId); // Assuming UserModel for fetching user data
-        return user ? user.username : 'Unknown User'; // Handle potential errors
+        const user = await User.findById(userId);
+        return user ? user.username : 'Unknown User'; 
       })
     );
 
-    // Create the chat with usernames
     const chat = await ChatModel.create({ users, participantNames: usernames });
 
-    // Associate participants with the chat (using the original _ids)
     for (const userId of users) {
-      await associateParticipant(chat._id, userId); // Replace with your logic
+      await associateParticipant(chat._id, userId);
     }
 
-    // Broadcast the new chat (optional, modify if needed)
     io.emit('newChat', chat);
 
     res.status(201).json(chat);
