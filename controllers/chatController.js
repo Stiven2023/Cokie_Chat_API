@@ -18,7 +18,7 @@ export default chatSocketController;
 async function createChat(req, res) {
   try {
     const { participantNames, users, messages } = req.body;
-    const chat = await ChatModel.create({ participantNames, users, messages });
+    const chat = await ChatModel.create({ participantNames, users });
 
     io.emit('newChat', chat);
 
