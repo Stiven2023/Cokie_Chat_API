@@ -1,7 +1,6 @@
 import { ChatModel } from '../models/chatModel.js';
 import { User } from '../models/userModel.js';
 import { io } from '../index.js';
-import { User } from '../models/userModel.js';
 
 const chatSocketController = (socket) => {
   console.log("User connected to chat socket");
