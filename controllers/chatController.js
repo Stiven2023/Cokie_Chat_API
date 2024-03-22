@@ -1,6 +1,5 @@
 import { ChatModel } from '../models/chatModel.js';
 import { io } from '../index.js';
-import { ObjectId } from 'mongoose'; // Importa ObjectId de mongoose
 
 const chatSocketController = (socket) => {
   console.log("User connected to chat socket");
@@ -36,7 +35,7 @@ async function getAllChats(req, res) {
       path: 'messages',
       populate: {
         path: 'sender',
-        select: 'username'
+        select: 'username avatar'
       }
     });
     res.json(chats);
