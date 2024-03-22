@@ -23,11 +23,11 @@ async function createChat(req, res) {
     const usernames = await Promise.all(
       users.map(async (userId) => {
         try {
-          const user = await User.findById(userId); 
-          return user ? user.username : 'Unknown User'; 
+          const user = await User.findById(userId);
+          return user ? user.username : 'Unknown User'; // Handle missing user
         } catch (error) {
           console.error(`Error fetching username for userId: ${userId}`, error);
-          return 'Unknown User'; 
+          return 'Unknown User'; // Consistent default username
         }
       })
     );
@@ -46,8 +46,6 @@ async function createChat(req, res) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-
-
 
 async function getAllChats(req, res) {
   try {
