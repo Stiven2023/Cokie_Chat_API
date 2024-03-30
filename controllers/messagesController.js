@@ -12,7 +12,7 @@ export async function createMessage(req, res) {
 
     console.log(message);
     io.emit('newMessage', message);
-    res.status(201).json(message, chatId);
+    res.status(201).json(message);
   } catch (error) {
     console.error("Error creating message:", error);
     res.status(500).json({ error: 'Internal Server Error' });
