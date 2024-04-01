@@ -36,10 +36,6 @@ async function createChat(req, res) {
 
     const chat = await ChatModel.create({ users, participantNames: usernames });
 
-    for (const userId of users) {
-      await associateParticipant(chat._id, userId);
-    }
-
     io.emit('newChat', chat);
 
     res.status(201).json(chat);
