@@ -111,7 +111,7 @@ async function updateChat(req, res) {
 
 async function deleteChat(req, res) {
   try {
-    const chatId = ObjectId(req.params.id); // Convierte el chatId de String a ObjectId
+    const chatId = req.params.id; // Convierte el chatId de String a ObjectId
     const deletedChat = await ChatModel.findByIdAndDelete(chatId);
 
     if (!deletedChat) {
