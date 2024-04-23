@@ -18,9 +18,9 @@ export default chatSocketController;
 
 async function createChat(req, res) {
   try {
-    const { users } = req.body;
+    const { users, name } = req.body;
 
-    console.log(users);
+    console.log(users, name);
 
     const usernames = await Promise.all(
       users.map(async (userId) => {
@@ -34,7 +34,7 @@ async function createChat(req, res) {
       })
     );
 
-    const chat = await ChatModel.create({ users, participantNames: usernames });
+    const chat = await ChatModel.create({ users, participantNames: usernames, name: name});
 
     io.emit('newChat', chat);
 
@@ -64,9 +64,10 @@ async function getAllChats(req, res) {
 
 async function joinChat(req, res) {
   try {
-    const chatId = req.params.id;
+    const userid = req.params.userid;
+    const chatId = req.params.chatid;
 
-    io.emit('userJoined', { chatId, userId: req.userId }); 
+    io.emit('userJoined', { chatId, userId: userid }); 
 
     res.status(200).json({ message: 'Joined chat successfully' });
   } catch (error) {

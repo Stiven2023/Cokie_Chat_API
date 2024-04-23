@@ -10,6 +10,7 @@ const MessageSchema = new Schema({
 });
 
 const ChatSchema = new Schema({
+  name: [{type : String, required: true}],
   participantNames: [{ type: String }],
   users: [{ type: Schema.Types.ObjectId, ref: "User" }],
   messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],

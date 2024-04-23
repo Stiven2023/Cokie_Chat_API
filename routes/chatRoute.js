@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', getAllChats);
 router.post('/', createChat);
-router.post('/:id/join', joinChat);
+router.post('/:userid/:chatid/join', joinChat);
 router.get('/:id', getChatById); 
 router.put('/:id', updateChat); 
 router.delete('/:id', deleteChat); 

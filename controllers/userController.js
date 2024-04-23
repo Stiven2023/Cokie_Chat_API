@@ -12,7 +12,6 @@ async function getAllUsers (req, res) {
   }
 };
 
-
 // Controlador para registrar un nuevo usuario
 async function registerUser (req, res) {
   try {
