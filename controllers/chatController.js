@@ -89,7 +89,7 @@ async function joinChat(req, res) {
     io.emit('userJoined', { chatId, userId });
     
     // Enviar los mensajes del chat al cliente
-    res.status(200).json({ message: 'Joined chat successfully', messages: chat.messages });
+    res.status(200).json({ message: 'Joined chat successfully', chat});
   } catch (error) {
     console.error("Error joining chat:", error);
     res.status(500).json({ error: 'Internal Server Error' });
