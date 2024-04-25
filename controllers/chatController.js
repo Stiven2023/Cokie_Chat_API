@@ -64,17 +64,32 @@ async function getAllChats(req, res) {
 
 async function joinChat(req, res) {
   try {
-    const userid = req.params.userid;
+    const userId = req.params.userid;
     const chatId = req.params.chatid;
 
-    io.emit('userJoined', { chatId, userId: userid }); 
+    // Verificar si el usuario existe
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
-    res.status(200).json({ message: 'Joined chat successfully' });
+    // Verificar si el chat existe
+    const chat = await ChatModel.findById(chatId).populate('messages');
+    if (!chat) {
+      return res.status(404).json({ error: 'Chat not found' });
+    }
+
+    // Si el usuario y el chat existen, emitir el evento y responder con éxito
+    io.emit('userJoined', { chatId, userId });
+    
+    // Enviar los mensajes del chat al cliente
+    res.status(200).json({ message: 'Joined chat successfully', messages: chat.messages });
   } catch (error) {
     console.error("Error joining chat:", error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
 
 async function getChatById(req, res) {
   try {
