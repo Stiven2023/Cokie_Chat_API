@@ -79,6 +79,12 @@ async function joinChat(req, res) {
       return res.status(404).json({ error: 'Chat not found' });
     }
 
+    // Verificar si el usuario está en la lista de usuarios del chat
+    const userInChat = chat.users.includes(userId);
+    if (!userInChat) {
+      return res.status(403).json({ error: 'User is not a member of this chat' });
+    }
+
     // Si el usuario y el chat existen, emitir el evento y responder con éxito
     io.emit('userJoined', { chatId, userId });
     
