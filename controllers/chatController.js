@@ -68,7 +68,7 @@ async function joinChat(req, res) {
     const chatId = req.params.chatid;
 
     // Verificar si el usuario existe
-    const user = await UserModel.findById(userId);
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
