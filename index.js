@@ -9,12 +9,16 @@ import cors from "cors";
 
 const app = express();
 const server = http.createServer(app);
+
+// Asegúrate de que 'http://localhost:3000' está incluido en los orígenes permitidos
 export const io = new Server(server, {
   cors: {
-    origin: ["https://cokie-chat-api.onrender.com"],
-    optionsSuccessStatus: 200
+    origin: ["https://cokie-chat-api.onrender.com", "http://localhost:3000"], // Agrega aquí tu origen local
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
+
 const PORT = process.env.PORT || 3000;
 
 io.on("connection", (socket) => {
@@ -27,7 +31,11 @@ io.on("connection", (socket) => {
 
 app.use(express.json());
 
-app.use(cors());
+app.use(cors({
+  origin: ["https://cokie-chat-api.onrender.com", "http://localhost:3000"], 
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+}));
 
 app.use("/messages", messageRoutes);
 app.use("/chats", chatRoutes);
