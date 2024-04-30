@@ -11,7 +11,8 @@ const app = express();
 const server = http.createServer(app);
 export const io = new Server(server, {
   cors: {
-    origin: "https://cokie-chat-api.onrender.com"
+    origin: ["https://cokie-chat-api.onrender.com"],
+    optionsSuccessStatus: 200
   }
 });
 const PORT = process.env.PORT || 3000;
