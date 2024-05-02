@@ -11,7 +11,7 @@ export async function createMessage(req, res) {
     await ChatModel.findByIdAndUpdate(chatId, { $push: { messages: message._id } });
 
     console.log(message);
-    io.emit('newMessage', message, user_id);
+    io.emit('newMessage', message);
     res.status(201).json(message);
   } catch (error) {
     console.error("Error creating message:", error);
